@@ -92,7 +92,7 @@ const OpenSourceInfo = ({
     }
   };
 
-  const addToFork = async (exporterInfo) => {
+  const addToFork = () => {
     if (!TOKEN) {
       setAlertMsg("You need to Sign in");
       showAlertModal();
@@ -100,27 +100,32 @@ const OpenSourceInfo = ({
     }
     if (!forkState) {
       setForkState(true);
-      await axios({
-        method: "POST",
-        url: `${BUCKET_API}`,
-        headers: {
-          Authorization: TOKEN,
-        },
-        data: {
-          exporter_id: exporterInfo["exporter_id"],
-        },
-      })
-        .then(() => {
-          setAlertMsg("This Exporter has been forked with Github");
-        })
-        .then(() => {
-          showAlertModal();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      forkGithub(exporterInfo);
     }
   };
+
+  const forkGithub = (exporterInfo) => {
+    axios({
+      method: "POST",
+      url: `${BUCKET_API}`,
+      headers: {
+        Authorization: TOKEN,
+      },
+      data: {
+        exporter_id: exporterInfo["exporter_id"],
+      },
+    })
+      .then(() => {
+        setAlertMsg("This Exporter has been forked with Github");
+      })
+      .then(() => {
+        showAlertModal();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleStar = () => {
     if (!TOKEN) {
       setAlertMsg("You need to Sign in");
@@ -176,12 +181,7 @@ const OpenSourceInfo = ({
             </HeaderTitle>
             <Category dark={changeTheme}>{exporterInfo.category}</Category>
             {forkState ? (
-              <Button
-                dark={changeTheme}
-                onClick={() => addToFork(exporterInfo)}
-                forkState={forkState}
-                fork="fork"
-              >
+              <Button dark={changeTheme} forkState={forkState} fork="fork">
                 <a
                   href={exporterInfo.forked_repository_url}
                   target="_blank"
@@ -194,7 +194,7 @@ const OpenSourceInfo = ({
             ) : (
               <Button
                 dark={changeTheme}
-                onClick={() => addToFork(exporterInfo)}
+                onClick={() => addToFork()}
                 forkState={forkState}
                 fork="fork"
               >
