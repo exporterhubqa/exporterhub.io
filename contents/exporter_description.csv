@@ -1,2 +1,3 @@
 "exporter_id","exporter_name","description"
 "41","MongoDB Exporter","custom exporter of MongDB "
+"17","CloudWatch Exporter","An exporter for Amazon CloudWatch, for Prometheus"
